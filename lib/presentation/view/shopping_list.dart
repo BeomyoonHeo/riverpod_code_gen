@@ -7,17 +7,17 @@ class ShoppingList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final shoppingList = ref.watch(shopListViewModel);
-    final searchedShoppingList = ref.watch(searchShoppingListProvider);
+    final shoppingList = ref.watch(searchShoppingListProvider);
+    final viewModel = ref.watch(shopListViewModel.select((value) => value.loading));
 
-    return shoppingList.map(
+    return viewModel.map(
       data: (data) => ListView.builder(
-          itemBuilder: (context, index) => ListTile(
-              leading: Image.network(searchedShoppingList[index].image),
-              title: Text(searchedShoppingList[index].title),
-              trailing: Text(searchedShoppingList[index].category.category.toString()),
-              subtitle: Text('${searchedShoppingList[index].price}\$')),
-          itemCount: searchedShoppingList.length),
+          itemBuilder: (_, index) => ListTile(
+              leading: Image.network(shoppingList[index].image),
+              title: Text(shoppingList[index].title),
+              trailing: Text(shoppingList[index].category.category.toString()),
+              subtitle: Text('${shoppingList[index].price}\$')),
+          itemCount: shoppingList.length),
       error: (error) => const Center(child: Text('error !')),
       loading: (loading) => _buildLoadingContainer(),
     );

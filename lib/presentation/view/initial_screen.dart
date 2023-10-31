@@ -13,7 +13,7 @@ class InitialScreen extends ConsumerWidget {
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           ElevatedButton(
             onPressed: () => Navigator.of(context).pushNamed(RouteName.shopList),
-            child: const Text('Increment'),
+            child: const Text('move to shop list'),
           ),
         ]),
       ),

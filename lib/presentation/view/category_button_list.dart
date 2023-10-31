@@ -14,9 +14,14 @@ class CategoryButtonList extends StatefulHookConsumerWidget {
 class _CategoryButtonListState extends ConsumerState<CategoryButtonList> {
   late final scrollController = useScrollController();
 
+  void _onPressedButton(int index) {
+    ref.read(shopListViewModel.notifier).changeCategory(EnumCategory.values[index]);
+    scrollController.animateTo(index * 200, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final currentCategory = ref.watch(enumCategoryProvider);
+    final currentCategory = ref.watch(shopListViewModel.select((value) => value.enumCategory));
     return ListView.separated(
         controller: scrollController,
         scrollDirection: Axis.horizontal,
@@ -28,10 +33,5 @@ class _CategoryButtonListState extends ConsumerState<CategoryButtonList> {
             child: Text(EnumCategory.values[index].toString())),
         separatorBuilder: (_, index) => const SizedBox(width: 20),
         itemCount: EnumCategory.values.length);
-  }
-
-  void _onPressedButton(int index) {
-    ref.read(shopListViewModel.notifier).changeCategory(EnumCategory.values[index]);
-    scrollController.animateTo(index * 200, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
   }
 }

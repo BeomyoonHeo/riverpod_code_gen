@@ -14,17 +14,24 @@ class _SearchKeywordContainerState extends ConsumerState<SearchKeywordContainer>
   late final TextEditingController textController = useTextEditingController();
   late final FocusNode focusNode = useFocusNode();
 
+  void _onEditingComplete() => ref.read(shopListViewModel.notifier).changeSearchWord(textController.text);
+
+  void _resetSearchWord() => ref.read(shopListViewModel.notifier).changeSearchWord('');
+
+  VoidCallback? _listenTextController() {
+    textController.addListener(() {
+      if (textController.text.isEmpty) {
+        _resetSearchWord();
+        focusNode.unfocus();
+      }
+    });
+    return () {};
+  }
+
   @override
   Widget build(BuildContext context) {
-    useEffect(() {
-      textController.addListener(() {
-        if (textController.text.isEmpty) {
-          _resetSearchWord();
-          focusNode.unfocus();
-        }
-      });
-      return null;
-    }, []);
+    useEffect(_listenTextController, []);
+
     return Container(
       height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -38,13 +45,5 @@ class _SearchKeywordContainerState extends ConsumerState<SearchKeywordContainer>
         ),
       ),
     );
-  }
-
-  void _onEditingComplete() {
-    ref.read(shopListViewModel.notifier).changeSearchWord(textController.text);
-  }
-
-  void _resetSearchWord() {
-    ref.read(shopListViewModel.notifier).changeSearchWord('');
   }
 }
