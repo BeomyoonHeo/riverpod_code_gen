@@ -19,6 +19,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'riverpod example',
+      theme: ThemeData(useMaterial3: true),
       debugShowCheckedModeBanner: false,
       routes: AppRoute.routes,
       initialRoute: RouteName.initialScreen,

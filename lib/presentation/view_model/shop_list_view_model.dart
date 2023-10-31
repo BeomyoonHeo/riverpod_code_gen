@@ -10,6 +10,9 @@ import 'package:riverpod_practice/presentation/view_model/shop_list_view_model_s
 
 part 'shop_list_view_model.g.dart';
 
+final shopListViewModel =
+    StateNotifierProvider.autoDispose<ShopListViewModel, ShopListViewModelState>((ref) => ShopListViewModel(ref));
+
 class ShopListViewModel extends BaseViewModel<ShopListViewModelState> {
   ShopListViewModel(this._ref) : super(const ShopListViewModelState());
 
@@ -45,10 +48,6 @@ class ShopListViewModel extends BaseViewModel<ShopListViewModelState> {
     changeState(() => state.copyWith(searchWord: searchWord));
   }
 }
-
-final shopListViewModel = StateNotifierProvider.autoDispose<ShopListViewModel, ShopListViewModelState>((ref) {
-  return ShopListViewModel(ref);
-});
 
 @riverpod
 List<ShoppingItemModel> filterShoppingList(FilterShoppingListRef ref) {
