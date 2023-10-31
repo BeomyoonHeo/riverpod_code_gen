@@ -2,9 +2,8 @@ import 'dart:convert';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
+import 'package:riverpod_practice/data/response/shopping_response.dart';
 import 'package:riverpod_practice/domain/repository/shopping_repository.dart';
-import 'package:riverpod_practice/response/shopping_response.dart';
 
 class ShoppingRepositoryImpl implements ShoppingRepository {
   @override

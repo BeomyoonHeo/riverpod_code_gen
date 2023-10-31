@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_practice/response/shopping_response.dart';
+import 'package:riverpod_practice/data/response/shopping_response.dart';
 
 part 'shopping_item_model.freezed.dart';
 
