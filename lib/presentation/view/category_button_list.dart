@@ -15,13 +15,13 @@ class _CategoryButtonListState extends ConsumerState<CategoryButtonList> {
   late final scrollController = useScrollController();
 
   void _onPressedButton(int index) {
-    ref.read(shopListViewModel.notifier).changeCategory(EnumCategory.values[index]);
+    ref.read(shopListViewModelProvider.notifier).changeCategory(EnumCategory.values[index]);
     scrollController.animateTo(index * 200, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentCategory = ref.watch(shopListViewModel.select((value) => value.enumCategory));
+    final currentCategory = ref.watch(shopListViewModelProvider.select((value) => value.enumCategory));
     return ListView.separated(
         controller: scrollController,
         scrollDirection: Axis.horizontal,

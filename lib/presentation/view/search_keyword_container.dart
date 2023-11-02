@@ -14,7 +14,7 @@ class SearchKeywordContainer extends HookConsumerWidget {
     useEffect(() {
       textController.addListener(() {
         if (textController.text.isEmpty) {
-          ref.read(shopListViewModel.notifier).changeSearchWord('');
+          ref.read(shopListViewModelProvider.notifier).changeSearchWord('');
           focusNode.unfocus();
         }
       });
@@ -27,7 +27,7 @@ class SearchKeywordContainer extends HookConsumerWidget {
       child: TextField(
         controller: textController,
         focusNode: focusNode,
-        onEditingComplete: () => ref.read(shopListViewModel.notifier).changeSearchWord(textController.text),
+        onEditingComplete: () => ref.read(shopListViewModelProvider.notifier).changeSearchWord(textController.text),
         decoration: const InputDecoration(
           hintText: 'Search',
           border: OutlineInputBorder(),

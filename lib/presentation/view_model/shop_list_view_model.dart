@@ -1,83 +1,74 @@
-// ignore_for_file: avoid_manual_providers_as_generated_provider_dependency
-import 'package:get_it/get_it.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:riverpod_practice/data/repository/shopping_repository_impl.dart';
 import 'package:riverpod_practice/domain/model/shopping_item_model.dart';
 import 'package:riverpod_practice/domain/repository/shopping_repository.dart';
-import 'package:riverpod_practice/presentation/view_model/base/base_view_model.dart';
 import 'package:riverpod_practice/presentation/view_model/shop_list_view_model_state.dart';
 
 part 'shop_list_view_model.g.dart';
 
-final shopListViewModel =
-    StateNotifierProvider.autoDispose<ShopListViewModel, ShopListViewModelState>((ref) => ShopListViewModel(ref));
-
-class ShopListViewModel extends BaseViewModel<ShopListViewModelState> {
-  ShopListViewModel(this._ref) : super(const ShopListViewModelState());
-
-  final _ref;
-
+@riverpod
+class ShopListViewModel extends _$ShopListViewModel {
   @override
-  void init() async {
-    super.init();
-    Logger().i('🐶🐶🐶init');
-    await _getShoppingList();
+  ShopListViewModelState build() {
+    _shoppingRepository = ref.watch(shoppingRepositoryProvider);
+    return const ShopListViewModelState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    Logger().i('🐶🐶🐶dispose');
-  }
+  late final ShoppingRepository _shoppingRepository;
 
-  Future<void> _getShoppingList() async {
-    final response = await GetIt.instance.get<ShoppingRepository>().getShoppingList();
-
+  Future<void> getShoppingList() async {
+    final response = await _shoppingRepository.getShoppingList();
     response.fold((l) {
-      changeState(() => state.copyWith(shoppingList: l.map((e) => ShoppingItemModel.fromResponse(e)).toList()));
-      changeState(() => state.copyWith(loading: const AsyncData(null)));
-    }, (r) => changeState(() => state.copyWith(loading: AsyncError(r, StackTrace.current))));
+      state = state.copyWith(
+          shoppingList: l.map((e) => ShoppingItemModel.fromResponse(e)).toList(), loading: const AsyncData(null));
+    }, (r) => state = state.copyWith(loading: AsyncError(r, StackTrace.current)));
   }
 
   void changeCategory(EnumCategory category) {
-    changeState(() => state.copyWith(enumCategory: category));
+    state = state.copyWith(enumCategory: category);
   }
 
   void changeSearchWord(String searchWord) {
-    changeState(() => state.copyWith(searchWord: searchWord));
+    state = state.copyWith(searchWord: searchWord);
   }
 }
 
-@riverpod
-List<ShoppingItemModel> filterShoppingList(FilterShoppingListRef ref) {
-  final shoppingList = ref.watch(shopListViewModel).shoppingList;
-  final enumCategory = ref.watch(shopListViewModel).enumCategory;
+@Riverpod(keepAlive: false)
+List<ShoppingItemModel> shoppingList(ShoppingListRef ref) {
+  final shoppingList = ref.watch(shopListViewModelProvider.select((value) => value.shoppingList));
+  final searchWord = ref.watch(shopListViewModelProvider.select((value) => value.searchWord));
+  final enumCategory = ref.watch(shopListViewModelProvider.select((value) => value.enumCategory));
+  List<ShoppingItemModel> filteringShoppingList = [];
 
-  switch (enumCategory) {
-    case EnumCategory.electronics:
-      return shoppingList.where((element) => element.category.category == EnumCategory.electronics).toList();
-
-    case EnumCategory.jewelery:
-      return shoppingList.where((element) => element.category.category == EnumCategory.jewelery).toList();
-
-    case EnumCategory.menClothing:
-      return shoppingList.where((element) => element.category.category == EnumCategory.menClothing).toList();
-
-    case EnumCategory.womenClothing:
-      return shoppingList.where((element) => element.category.category == EnumCategory.womenClothing).toList();
-
-    default:
+  List<ShoppingItemModel> searchWordFiltering(List<ShoppingItemModel> shoppingList) {
+    if (searchWord.isEmpty) {
       return shoppingList;
+    }
+    return shoppingList.where((t) => t.title.contains(searchWord)).toList();
   }
-}
 
-@riverpod
-List<ShoppingItemModel> searchShoppingList(SearchShoppingListRef ref) {
-  final String searchWord = ref.watch(shopListViewModel).searchWord;
-  final shoppingList = ref.watch(filterShoppingListProvider);
+  List<ShoppingItemModel> categoryFiltering() {
+    switch (enumCategory) {
+      case EnumCategory.electronics:
+        return shoppingList.where((element) => element.category.category == EnumCategory.electronics).toList();
+      case EnumCategory.jewelery:
+        return shoppingList.where((element) => element.category.category == EnumCategory.jewelery).toList();
+      case EnumCategory.menClothing:
+        return shoppingList.where((element) => element.category.category == EnumCategory.menClothing).toList();
+      case EnumCategory.womenClothing:
+        return shoppingList.where((element) => element.category.category == EnumCategory.womenClothing).toList();
+      case EnumCategory.none:
+        return shoppingList;
+    }
+  }
 
-  if (searchWord.isEmpty) return shoppingList;
+  void filtering() {
+    filteringShoppingList.addAll(categoryFiltering());
+    filteringShoppingList = searchWordFiltering(filteringShoppingList);
+  }
 
-  return shoppingList.where((element) => element.title.contains(searchWord)).toList();
+  filtering();
+
+  return filteringShoppingList;
 }

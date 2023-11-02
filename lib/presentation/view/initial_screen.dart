@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_practice/route_name.dart';
 
 class InitialScreen extends ConsumerWidget {
