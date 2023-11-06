@@ -4,7 +4,7 @@ import 'package:riverpod_practice/data/response/shopping_response.dart';
 
 part 'shopping_item_model.freezed.dart';
 
-@Freezed(copyWith: true, equal: true)
+@Freezed(copyWith: true, equal: false)
 class ShoppingItemModel with _$ShoppingItemModel {
   const factory ShoppingItemModel({
     required final int id,
@@ -14,6 +14,7 @@ class ShoppingItemModel with _$ShoppingItemModel {
     required final CategoryModel category,
     required final String image,
     required final RatingModel rating,
+    required final bool isAddedCart,
   }) = _ShoppingItemModel;
 
   factory ShoppingItemModel.fromResponse(ShoppingResponse response) => ShoppingItemModel(
@@ -27,6 +28,7 @@ class ShoppingItemModel with _$ShoppingItemModel {
           rate: response.rating.rate,
           count: response.rating.count,
         ),
+        isAddedCart: false,
       );
 }
 
@@ -49,11 +51,11 @@ class CategoryModel with _$CategoryModel {
 }
 
 enum EnumCategory {
+  none(''),
   electronics('electronics'),
   jewelery('jewelery'),
   menClothing('men\'s clothing'),
-  womenClothing('women\'s clothing'),
-  none('');
+  womenClothing('women\'s clothing');
 
   const EnumCategory(this._name);
 
@@ -74,5 +76,3 @@ enum EnumCategory {
     }
   }
 }
-
-final enumCategoryProvider = StateProvider.autoDispose((ref) => EnumCategory.none);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_practice/presentation/view/loading_overlay.dart';
+import 'package:riverpod_practice/core/component/loading_overlay.dart';
 
 part 'custom_loading.g.dart';
 

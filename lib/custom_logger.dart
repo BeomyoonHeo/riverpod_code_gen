@@ -9,10 +9,10 @@ class CustomLogger extends ProviderObserver {
     Object? newValue,
     ProviderContainer container,
   ) {
-    Logger().i('''
-{
-  "provider": "${provider.name ?? provider.runtimeType}",
-  "newValue": "$newValue"
-}''');
+//     Logger().i('''
+// {
+//   "provider": "${provider.name ?? provider.runtimeType}",
+//   "newValue": "$newValue"
+// }''');
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_practice/presentation/view_model/shop_list_view_model.dart';
+import 'package:riverpod_practice/presentation/view/shoping_list/shop_list_view_model.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SearchKeywordContainer extends HookConsumerWidget {
